@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+layout:decorator="template">
+<link rel="stylesheet" type="text/css"
+	href="webjars/bootstrap/4.3.1/css/bootstrap.min.css" />
+<head>
+<meta charset="utf-8">
+<title>Books List</title>
+</head>
+<body>
+<div layout:fragment="Mycontent">
+
+
+		<div class="container mt-5">
+
+
+			<div class="row">
+
+				<div class="col-sm-4 col-md-4 col-lg-4">
+					<div class="card-header">
+						<form th:action="@{rechercherProduitByCatId}" method="get">
+							<div class="form-group">
+                            	<label class="control-label">Genre :</label>
+                            	<select    th:value="${id}" type="text" name="id" class="form-control"
+								 multiple="false" required  >
+                                	<option th:each="c:${categories}" 
+                                    	th:value="${c.idGen}" th:text="${c.nomGen}">
+                                    </option>
+
+                            	</select>
+                            	<input type="submit" value="Rechercher par genre"
+							class="form-control btn btn-primary" />
+                            </form>
+   						</div>
+					</div>
+				</div>
+
+				<div class="col-sm-4 col-md-4 col-lg-4">
+					<div class="card-header">Search Book :</div>
+					<form th:action="@{rechercherProduit}" method="get">
+						<div class="form-group">
+							<!-- <label class="control-label" >Rechercher produit :</label> -->
+							<input type="text" name="nomProd" class="form-control" />
+						</div>
+					<input type="submit" value="Rechercher"
+							class="form-control btn btn-primary" />
+					</form>
+				</div>
+
+
+			</div>
+	
+	
+
+	<div class="container mt-2">
+		<div class="card">
+			<div class="card-header">Books List</div>
+			<div class="card-body">
+			
+				<table class="table table-striped">
+					<tr>
+						<th>ID</th>
+						<th>ISBN</th>
+						<th>Title</th>
+						<th>Author</th>
+						<th>Price</th>
+						<th>Publish</th>
+						<th>Genre</th>
+					</tr>
+					<tr th:each="l:${livres.content}">
+						<td th:text="${l.idLivre}"></td>
+						<td th:text="${l.isbnLivre}"></td>
+						<td th:text="${l.titreLivre}"></td>
+						<td th:text="${l.auteurLivre}"></td>
+						<td th:text="${l.prixLivre}"></td>
+						<td th:text="${l.datePublication}"></td>
+						<td th:if= "${!#strings.isEmpty(l.genre)}" th:text="${l.genre.nomGen}"></td>  
+  						<td th:if= "${#strings.isEmpty(l.genre)}" th:text="${'No Genre'}"></td>
+						<!-- <td th:text="${l.genre.nomGen}"></td> -->
+						<td sec:authorize="hasRole('ADMIN')">
+							<a class="btn btn-danger"
+							onclick="return confirm('Etes-vous sûr ?')"
+							th:href="@{supprimerBook(id=${l.idLivre},page=${currentPage},size=${size})}">
+							Delete</a>
+						</td>
+
+						<td sec:authorize="hasRole('ADMIN')">
+							<a class="btn btn-success"
+							th:href="@{modifierBook(id=${l.idLivre})}">Editer</a>
+						</td>
+					</tr>
+				</table>
+				<ul class="nav nav-pills">
+					<li th:each="page,status:${pages}"><a
+						th:class="${status.index==currentPage?'btn btn-primary':'btn' }"
+						th:href="@{ ListeBooks(page=${status.index}, size=${size} ) }"
+						th:text="${status.index }"></a></li>
+				</ul> 
+			</div>
+		</div>
+	</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorator="template">
+<link rel="stylesheet" type="text/css"
+	href="/webjars/bootstrap/4.3.1/css/bootstrap.min.css" />
+<head>
+<meta charset="utf-8">
+<title th:if="${mode=='new'}">Add Books</title>
+<title th:if="${mode=='edit'}">Modify Books</title>
+</head>
+<body>
+	<div layout:fragment="Mycontent">
+		<div class="container mt-5">
+			<div class="card">
+				<div class="card-header" th:if="${mode=='new'}"> Add Books </div>
+				<div class="card-header" th:if="${mode=='edit'}">Modify Books</div>
+				<div class="card-body">
+					<form th:action="@{saveBook}" method="post">
+						<div class="form-group">
+							<label class="control-label" hidden>ID :</label>
+							<input type="hidden" name="idLivre" class="form-control"
+							th:value="${book.idLivre}" th:if="${mode=='edit'}"/>
+						</div>
+						
+						<div class="form-group">
+							<label class="control-label" >ISBN :</label>
+							<input type="number" name="isbnLivre" class="form-control" min="1" step="1" required
+							th:value="${book.isbnLivre}" />
+						</div>
+						
+						<div class="form-group">
+							<label class="control-label">Title :</label> 
+							<input type="text" name="titreLivre" class="form-control" required
+							th:value="${book.titreLivre}" />
+							<span th:errors= ${book.titreLivre} class="text-danger"> </span>
+						</div>
+
+						<div class="form-group">
+							<label class="control-label">Author :</label> 
+							<input type="text" name="auteurLivre" class="form-control" required
+							th:value="${book.auteurLivre}" />
+							<span th:errors= ${book.auteurLivre} class="text-danger"> </span>
+						</div>
+						
+						<div class="form-group">
+							<label class="control-label">Price :</label> 
+							<input type="text" name="prixLivre" class="form-control" required
+								th:value="${book.prixLivre}" />
+								<span th:errors=${book.prixLivre} class="text-danger"> </span>
+						</div>
+						<div class="form-group">
+							<label class="control-label">Publish Date :</label> 
+							<input type="date" name="datePublication" class="form-control" required
+							th:value="${book.datePublication}"/>
+							<span th:errors=${book.datePublication} class="text-danger"> </span>
+						</div>
+
+
+						<!-- <div class="form-group">
+							<label class="control-label">Genre :</label> <select
+								th:value="${idc}" type="text" name="idc" class="form-control"
+								multiple="false" required>
+								<option th:each="c:${categories}" th:if="${mode=='edit'}"
+									th:value="${c.idGen}" th:text="${c.nomGen}"
+									th:selected="${ c.idGen==book.genre.idGen}"></option>
+
+								<option th:each="c:${categories}" th:if="${mode=='new'}"
+									th:value="${c.idGen}" th:text="${c.nomGen}"></option>
+								
+							</select>
+							<span th:errors= ${book.genre.idGen} class="text-danger"> </span>
+						</div> old with idc-->
+						
+						<div class="form-group">
+                            	<label class="control-label">Genre :</label>
+                            	<select    th:value="${book.genre.idGen}" type="text" name="genre" class="form-control"
+								 multiple="false" required  >
+                                	<option th:each="c:${categories}" th:if="${mode=='edit'}"
+                                    	th:value="${c.idGen}" th:text="${c.nomGen}"
+                                    	th:selected="${ c.idGen==book.genre.idGen}">
+                                    </option>
+                                    
+                                	<option th:each="c:${categories}" th:if="${mode=='new'}"
+                                    	th:value="${c.idGen}" th:text="${c.nomGen}">
+                                    </option>
+                            	</select>
+                            	<span th:errors= ${book.genre.idGen} class="text-danger"> </span>
+   						</div>
+
+						<div>
+							<button type="submit" class="btn btn-primary" th:if="${mode=='new'}">Add</button>
+							<button type="submit" class="btn btn-primary"  th:if="${mode=='edit'}">Modify</button>
+				
+						</div>
+
+					</form>
+				<!-- <table>
+					<tr th:each="c:${categories}">
+						<td th:text="${c.idCat}"></td>
+						<td th:text="${c.nomCat}"></td>
+						<td th:text="${c.descriptionCat}"></td>
+					</tr>
+				</table>-->
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>
